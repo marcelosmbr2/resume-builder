@@ -103,7 +103,7 @@ function OverviewPane({ app }) {
       </div>
       <div class="group open">
         ${data.sections.map((x, i) => html`<div key=${x.id} data-row="1" class="drag-row row link"
-          style=${{ minHeight: '56px', padding: '6px 14px 6px 4px', gap: '8px', ...app.dragStyle('sections', i, n) }}
+          style=${{ minHeight: '56px', padding: '6px 10px 6px 4px', gap: '8px', ...app.dragStyle('sections', i, n) }}
           onClick=${() => app.openSection(x.id)}>
           <div class="grip" onPointerDown=${e => app.startDrag('sections', i, n, e)} onClick=${e => e.stopPropagation()}>${ic('grip')}</div>
           <div class="tile" style=${iconTint(x.visible)}>${ic(TYPES[x.type].icon)}</div>
@@ -111,7 +111,9 @@ function OverviewPane({ app }) {
             <div class="ellipsis" style="font-weight:700">${x.title}</div>
             <div class="ellipsis muted" style="font-size:13px">${sectionMeta(app, x)}</div>
           </div>
-          ${ic('chev', 14)}
+          <${Switch} title="Mostrar no currículo" on=${x.visible}
+            onClick=${e => { e.stopPropagation(); app.upd(d => { const t = d.sections.find(y => y.id === x.id); t.visible = !t.visible; }); }} />
+          <button class="round del" title="Remover seção" style="margin-right:-4px" onClick=${e => { e.stopPropagation(); app.removeSection(x.id); }}>${ic('trash')}</button>
         </div>`)}
       </div>
       <div class="pill-row"><button class="pill" onClick=${manage}>${ic('plus')}Adicionar seção</button></div>
