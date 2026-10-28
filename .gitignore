@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Design mockup: kept locally as the spec, not versioned
+mockup/

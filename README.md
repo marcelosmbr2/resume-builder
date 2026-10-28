@@ -1,6 +1,6 @@
 # Currículos
 
-Aplicativo desktop para criar e exportar currículos em PDF, feito com Tauri 2 e Preact. A interface segue o mockup em `mockup/mockup.html`.
+Aplicativo desktop para criar e exportar currículos em PDF, feito com Tauri 2 e Preact.
 
 ## Funcionalidades
 

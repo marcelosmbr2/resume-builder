@@ -62,7 +62,7 @@ To inspect or script the running app, start it with `WEBVIEW2_ADDITIONAL_BROWSER
 
 ## Design mockup (`mockup/mockup.html`)
 
-The mockup is the spec for this app. It is a ~2.6 MB self-unpacking bundle, so don't read it whole.
+The mockup is the spec for this app. It is git-ignored and exists only in local checkouts that have a copy. It is a ~2.6 MB self-unpacking bundle, so don't read it whole.
 
 - **Line 384:** the UI template and its component logic, as a JSON-encoded string. Decode that one line (JSON-parse it, then HTML-unescape it) and grep the result.
 - **Line 372:** the bundled assets, base64 and gzip encoded where marked as compressed. Among them are the `ResumePage` sub-component (`./ResumePage.dc.html`) and the Inter and Alegreya fonts (copied into `src/fonts/`).
