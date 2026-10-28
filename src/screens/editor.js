@@ -81,6 +81,7 @@ function OverviewPane({ app }) {
   const data = app.data(); const pn = data.personal;
   const initials = (pn.name || '?').split(/\s+/).filter(Boolean).slice(0, 2).map(w => w[0].toUpperCase()).join('');
   const manage = () => app.setState({ dlg: 'manage' });
+  const n = data.sections.length;
   return html`<div class="stack">
     <div>
       <div class="sec-title">Cabeçalho</div>
@@ -100,8 +101,11 @@ function OverviewPane({ app }) {
         <div style="font-weight:700;flex:1">Seções</div>
         <button class="link-btn" onClick=${manage}>${ic('sort')}Gerenciar</button>
       </div>
-      <div class="group">
-        ${data.sections.map(x => html`<div key=${x.id} class="row link" style="min-height:56px" onClick=${() => app.openSection(x.id)}>
+      <div class="group open">
+        ${data.sections.map((x, i) => html`<div key=${x.id} data-row="1" class="drag-row row link"
+          style=${{ minHeight: '56px', padding: '6px 14px 6px 4px', gap: '8px', ...app.dragStyle('sections', i, n) }}
+          onClick=${() => app.openSection(x.id)}>
+          <div class="grip" onPointerDown=${e => app.startDrag('sections', i, n, e)} onClick=${e => e.stopPropagation()}>${ic('grip')}</div>
           <div class="tile" style=${iconTint(x.visible)}>${ic(TYPES[x.type].icon)}</div>
           <div style=${{ flex: 1, minWidth: 0, opacity: x.visible ? 1 : 0.55 }}>
             <div class="ellipsis" style="font-weight:700">${x.title}</div>
