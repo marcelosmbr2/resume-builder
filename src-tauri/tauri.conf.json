@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "app",
+  "productName": "Currículos",
   "version": "0.1.0",
   "identifier": "com.marce.app",
   "build": {
@@ -10,9 +10,16 @@
     "withGlobalTauri": true,
     "windows": [
       {
-        "title": "app",
-        "width": 800,
-        "height": 600
+        "label": "main",
+        "title": "Currículos",
+        "width": 1280,
+        "height": 820,
+        "minWidth": 960,
+        "minHeight": 640,
+        "center": true,
+        "decorations": false,
+        "shadow": true,
+        "dragDropEnabled": false
       }
     ],
     "security": {
