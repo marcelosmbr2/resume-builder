@@ -1,0 +1,53 @@
+# Builds the Windows installers and publishes them in a GitHub release
+# whenever a version tag (v1.2.3) is pushed.
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    # PDF export uses WebView2, so the app only ships for Windows.
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check the tag matches the app version
+        shell: bash
+        run: |
+          version=$(node -p "require('./src-tauri/tauri.conf.json').version")
+          if [ "v$version" != "$GITHUB_REF_NAME" ]; then
+            echo "::error::Tag $GITHUB_REF_NAME does not match version $version in tauri.conf.json"
+            exit 1
+          fi
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: "./src-tauri -> target"
+
+      - uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tauriScript: npx --yes @tauri-apps/cli@2
+          tagName: ${{ github.ref_name }}
+          releaseName: Currículos ${{ github.ref_name }}
+          releaseBody: |
+            Baixe o instalador para Windows:
+
+            - arquivo terminado em `_x64-setup.exe`: instalador recomendado, não precisa de administrador.
+            - arquivo terminado em `_x64_pt-BR.msi`: pacote MSI, para instalação gerenciada.
+
+            O instalador não é assinado, então o Windows SmartScreen pode avisar na primeira execução: clique em "Mais informações" e depois em "Executar assim mesmo".
+          releaseDraft: false
+          prerelease: false
