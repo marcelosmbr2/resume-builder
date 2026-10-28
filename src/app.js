@@ -3,7 +3,7 @@ import { TYPES } from './lib/constants.js';
 import { ListScreen } from './screens/list.js';
 import { SettingsScreen } from './screens/settings.js';
 import { EditorScreen } from './screens/editor.js';
-import { ManageDialog, ExportDialog, AlertDialog, Toast } from './screens/dialogs.js';
+import { AddSectionDialog, ExportDialog, AlertDialog, Toast } from './screens/dialogs.js';
 
 const { invoke } = window.__TAURI__.core;
 
@@ -173,6 +173,7 @@ export class App extends Component {
   addSection(type) {
     const id = this.uid();
     this.upd(d => d.sections.push({ id, type, title: TYPES[type].label, visible: true, entries: [], html: '' }));
+    this.setState({ dlg: null });
     this.toast('Seção “' + TYPES[type].label + '” adicionada ao final', 'Editar', () => this.setState({ dlg: null, toast: null, pane: { page: 'section', sid: id } }));
   }
   removeSection(id) {
@@ -260,7 +261,7 @@ export class App extends Component {
       ${s.screen === 'settings' && html`<${SettingsScreen} app=${this} />`}
       ${s.screen === 'editor' && data && html`<${EditorScreen} app=${this} />`}
       ${s.menuFor && html`<div class="scrim" onClick=${() => this.setState({ menuFor: null })} />`}
-      ${s.dlg === 'manage' && data && html`<${ManageDialog} app=${this} />`}
+      ${s.dlg === 'addSection' && data && html`<${AddSectionDialog} app=${this} />`}
       ${s.dlg === 'export' && data && html`<${ExportDialog} app=${this} />`}
       ${s.dlg === 'alert' && html`<${AlertDialog} app=${this} />`}
       ${s.toast && html`<${Toast} app=${this} />`}

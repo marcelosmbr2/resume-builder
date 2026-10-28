@@ -1,8 +1,7 @@
 import { html } from '../vendor/preact-htm.js';
 import { TYPES, ic } from '../lib/constants.js';
 import { ResumePage } from '../components/ResumePage.js';
-import { Switch, SwitchRow } from '../components/ui.js';
-import { sectionMeta, iconTint } from './editor.js';
+import { SwitchRow } from '../components/ui.js';
 
 const { invoke } = window.__TAURI__.core;
 const stop = e => e.stopPropagation();
@@ -19,59 +18,25 @@ function Dialog({ app, width, children }) {
   </div>`;
 }
 
-export function ManageDialog({ app }) {
-  const data = app.data(); const n = data.sections.length;
+export function AddSectionDialog({ app }) {
+  const data = app.data();
   return html`<${Dialog} app=${app} width=${540}>
     <div class="dlg-hdr" style="justify-content:flex-end">
-      <div class="t">Gerenciar seções</div>
+      <div class="t">Adicionar seção</div>
       <button class="close-btn" onClick=${app.closeDlg}>${ic('close')}</button>
     </div>
-    <div class="dlg-body" style="padding:8px 22px 26px;gap:26px">
-      <div>
-        <div class="sec-title tight">Ordem no documento</div>
-        <div class="sec-hint">Arraste pela alça para reordenar. O cabeçalho fica sempre no topo.</div>
-        <div class="group open">
-          <div style="background:var(--card);height:58px;padding:0 14px 0 8px;display:flex;align-items:center;gap:10px;border-radius:12px 12px 0 0">
-            <div style="width:24px;display:grid;place-items:center;color:rgba(var(--fg),.35)">${ic('lock', 14)}</div>
-            <div class="tile" style="background:rgba(var(--fg),.06)">${ic('person')}</div>
-            <div style="flex:1;min-width:0">
-              <div style="font-weight:700">Cabeçalho</div>
-              <div class="muted" style="font-size:13px">Nome, título e contatos</div>
-            </div>
-            <div style="font-size:13px;color:rgba(var(--fg),.45)">Fixo</div>
-          </div>
-          ${data.sections.map((x, i) => {
-            const ds = app.dragStyle('sections', i, n);
-            // The fixed header row sits above, so only the last row rounds its corners.
-            const dragging = app.state.drag && app.state.drag.list === 'sections' && app.state.drag.from === i;
-            if (!dragging) ds.borderRadius = i === n - 1 ? '0 0 12px 12px' : '0';
-            return html`<div key=${x.id} data-row="1" class="drag-row" style=${{ background: 'var(--card)', height: '58px', padding: '0 8px 0 4px', display: 'flex', alignItems: 'center', gap: '10px', ...ds }}>
-              <div class="grip" style="color:rgba(var(--fg),.45)" onPointerDown=${e => app.startDrag('sections', i, n, e)}>${ic('grip')}</div>
-              <div class="tile" style=${iconTint(x.visible)}>${ic(TYPES[x.type].icon)}</div>
-              <div style=${{ flex: 1, minWidth: 0, opacity: x.visible ? 1 : 0.55 }}>
-                <div class="ellipsis" style="font-weight:700">${x.title}</div>
-                <div class="muted" style="font-size:13px">${sectionMeta(app, x)}</div>
-              </div>
-              <${Switch} title="Mostrar no currículo" on=${x.visible} onClick=${() => app.upd(d => { const t = d.sections.find(y => y.id === x.id); t.visible = !t.visible; })} />
-              <button class="round del" title="Remover seção" style="margin-left:4px" onClick=${() => app.removeSection(x.id)}>${ic('trash')}</button>
-            </div>`;
-          })}
-        </div>
-      </div>
-      <div>
-        <div class="sec-title tight">Adicionar seção</div>
-        <div class="sec-hint">Novas seções entram no final do documento.</div>
-        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px">
-          ${Object.keys(TYPES).map(k => {
-            // Custom sections can repeat; every other type appears once.
-            const used = k !== 'custom' && data.sections.some(x => x.type === k);
-            return html`<button key=${k} class="add-type" style=${{ cursor: used ? 'default' : 'pointer', opacity: used ? 0.5 : 1 }} onClick=${() => { if (!used) app.addSection(k); }}>
-              <div class="tile" style="width:30px;height:30px;background:rgba(var(--fg),.06)">${ic(TYPES[k].icon)}</div>
-              <span class="ellipsis" style="flex:1;min-width:0">${TYPES[k].label}</span>
-              <span style="font-size:12.5px;color:rgba(var(--fg),.5);display:flex">${used ? 'Adicionada' : ic('plus')}</span>
-            </button>`;
-          })}
-        </div>
+    <div class="dlg-body" style="padding:8px 22px 26px">
+      <div class="sec-hint">Novas seções entram no final do documento.</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px">
+        ${Object.keys(TYPES).map(k => {
+          // Custom sections can repeat; every other type appears once.
+          const used = k !== 'custom' && data.sections.some(x => x.type === k);
+          return html`<button key=${k} class="add-type" style=${{ cursor: used ? 'default' : 'pointer', opacity: used ? 0.5 : 1 }} onClick=${() => { if (!used) app.addSection(k); }}>
+            <div class="tile" style="width:30px;height:30px;background:rgba(var(--fg),.06)">${ic(TYPES[k].icon)}</div>
+            <span class="ellipsis" style="flex:1;min-width:0">${TYPES[k].label}</span>
+            <span style="font-size:12.5px;color:rgba(var(--fg),.5);display:flex">${used ? 'Adicionada' : ic('plus')}</span>
+          </button>`;
+        })}
       </div>
     </div>
   <//>`;

@@ -37,8 +37,6 @@ button { font-family: inherit; }
 .pill { height: 36px; padding: 0 18px 0 14px; border: none; border-radius: 999px; background: rgba(var(--fg), .08); font-weight: 700; font-size: 14.5px; color: rgba(var(--fg), .8); cursor: pointer; display: flex; align-items: center; gap: 8px; }
 .pill:hover { background: rgba(var(--fg), .12); }
 .pill-row { display: flex; justify-content: center; margin-top: 16px; }
-.link-btn { height: 30px; padding: 0 10px; border: none; border-radius: 6px; background: transparent; font-weight: 700; font-size: 13.5px; color: var(--accentfg); cursor: pointer; display: flex; align-items: center; gap: 6px; }
-.link-btn:hover { background: rgba(53,132,228,.1); }
 .round { width: 34px; height: 34px; border: none; border-radius: 50%; background: transparent; display: grid; place-items: center; color: rgba(var(--fg), .6); cursor: pointer; padding: 0; flex: none; }
 .round:hover { background: rgba(var(--fg), .08); }
 .round.del:hover { background: rgba(224,27,36,.1); color: var(--dangerfg); }

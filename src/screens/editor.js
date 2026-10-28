@@ -38,7 +38,7 @@ export function EditorScreen({ app }) {
           <div class="ellipsis" style="font-weight:700">${res.name}</div>
           <div class="muted" style="font-size:12.5px;white-space:nowrap">${docInfo}</div>
         </div>
-        <button class="btn ic" onClick=${() => app.setState({ dlg: 'manage' })}>${ic('sort')}Seções</button>
+        <button class="btn ic" title="Adicionar seção" onClick=${() => app.setState({ dlg: 'addSection' })}>${ic('plus')}Seção</button>
         <button class="btn ic accent" onClick=${() => openExport(app)}>${ic('export')}Exportar PDF</button>
         <button class="ibtn" title=${app.isDark() ? 'Mudar para tema claro' : 'Mudar para tema escuro'} onClick=${app.toggleTheme}>${ic(app.isDark() ? 'sun' : 'moon')}</button>
         <${WinControls} />
@@ -68,19 +68,19 @@ function openExport(app) {
   app.setState({ dlg: 'export', exp: { ...s.exp, busy: false, prog: 0, file, folder: s.exp.folder || s.saveDir } });
 }
 
-export function sectionMeta(app, x) {
+function sectionMeta(app, x) {
   const base = x.type === 'summary' ? (app.strip(x.html) ? 'Texto' : 'Vazio') : (x.entries.length === 1 ? '1 entrada' : x.entries.length + ' entradas');
   return (x.visible ? '' : 'Oculta · ') + base;
 }
 
-export function iconTint(on) {
+function iconTint(on) {
   return on ? { background: 'rgba(53,132,228,.12)', color: 'var(--accentfg)' } : { background: 'rgba(var(--fg),.06)', color: 'rgba(var(--fg),.45)' };
 }
 
 function OverviewPane({ app }) {
   const data = app.data(); const pn = data.personal;
   const initials = (pn.name || '?').split(/\s+/).filter(Boolean).slice(0, 2).map(w => w[0].toUpperCase()).join('');
-  const manage = () => app.setState({ dlg: 'manage' });
+  const addSection = () => app.setState({ dlg: 'addSection' });
   const n = data.sections.length;
   return html`<div class="stack">
     <div>
@@ -97,10 +97,8 @@ function OverviewPane({ app }) {
       </div>
     </div>
     <div>
-      <div style="display:flex;align-items:center;margin:0 0 8px 4px">
-        <div style="font-weight:700;flex:1">Seções</div>
-        <button class="link-btn" onClick=${manage}>${ic('sort')}Gerenciar</button>
-      </div>
+      <div class="sec-title tight">Seções</div>
+      <div class="sec-hint">Arraste pela alça para reordenar. O cabeçalho fica sempre no topo.</div>
       <div class="group open">
         ${data.sections.map((x, i) => html`<div key=${x.id} data-row="1" class="drag-row row link"
           style=${{ minHeight: '56px', padding: '6px 10px 6px 4px', gap: '8px', ...app.dragStyle('sections', i, n) }}
@@ -116,7 +114,7 @@ function OverviewPane({ app }) {
           <button class="round del" title="Remover seção" style="margin-right:-4px" onClick=${e => { e.stopPropagation(); app.removeSection(x.id); }}>${ic('trash')}</button>
         </div>`)}
       </div>
-      <div class="pill-row"><button class="pill" onClick=${manage}>${ic('plus')}Adicionar seção</button></div>
+      <div class="pill-row"><button class="pill" onClick=${addSection}>${ic('plus')}Adicionar seção</button></div>
     </div>
   </div>`;
 }
