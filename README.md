@@ -1,4 +1,4 @@
-# Currículos
+# Construtor de Currículo 
 
 Aplicativo desktop para criar e exportar currículos em PDF, feito com Tauri 2 e Preact.
 
